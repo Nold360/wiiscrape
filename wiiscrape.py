@@ -8,10 +8,13 @@
 # Dumpsize is about 21GB
 # 
 import xml.etree.ElementTree as ET
+import gettext
 from binascii import hexlify
 from struct import unpack
 from threading import Thread
 from time import sleep
+
+gettext.install('base', localedir='locales')
 
 import urllib.request
 import shutil
@@ -49,7 +52,7 @@ class NUSTitle(Thread):
 
         path = DOWNLOAD_PATH + "/" + titleID + "/" + filename
         if self.debug:
-            print("Downloading: " + url)
+            print(_("Downloading: ") + url)
 
         try:
             with urllib.request.urlopen(req) as response, open(path, 'wb') as out_file:
@@ -57,7 +60,7 @@ class NUSTitle(Thread):
         except KeyboardInterrupt:
             raise
         except Exception as e:
-            print("  - Failed downloading: %s\n  - %s" % (url, str(e)))
+            print(_("  - Failed downloading: %s\n  - %s") % (url, str(e)))
             return False
         return True
 
@@ -72,7 +75,7 @@ class NUSTitle(Thread):
             # Number of Contents
             tmd.seek(0x1DE)
             count = unpack(">H", tmd.read(2))[0]
-            #print("Content count: " + str(count))
+            #print(_("Content count: ") + str(count))
 
             # Contents
             tmd.seek(0x1E4)
@@ -80,7 +83,7 @@ class NUSTitle(Thread):
             
             content = []
             if self.debug:
-                print("Downloading Content:")
+                print(_("Downloading Content:"))
             for i in range(count):
                 # This will extract content id, index, type, size and SHA1 hash and store them in a list
                 # https://docs.python.org/3/library/struct.html#format-characters ("IHHQ": 4, 2, 2, 8)
@@ -88,7 +91,7 @@ class NUSTitle(Thread):
                 data.append(hexlify(tmd.read(20)))
 
                 if self.debug:
-                    print("  - Content: %i/%i [%s] - %i Bytes" % ((i+1), count, str("%08X" % data[0]), data[3]))
+                    print(_("  - Content: %i/%i [%s] - %i Bytes") % ((i+1), count, str("%08X" % data[0]), data[3]))
                     print(NUS_BASE_URL + "/" + titleID + "/" + str("%08X" % data[0]))
                 self.download_file(titleID, str("%08X" % data[0]).lower())
                 
@@ -100,7 +103,7 @@ class NUSTitle(Thread):
             # -1 = latest
             for titleID in self.titleIDlist:
                 if self.debug:
-                    print("\n + Downloading %s(%s) v%s" % (self.name, titleID, ver))
+                    print(_("\n + Downloading %s(%s) v%s") % (self.name, titleID, ver))
 
                 # Download Latest Version
 
@@ -113,10 +116,10 @@ class NUSTitle(Thread):
                     # Download cetk / ticket
                     if "true" in self.ticket:
                         if self.debug:
-                           print("  - Downloading Ticket..")
+                           print(_("  - Downloading Ticket.."))
                         self.download_file(titleID, "cetk")
                     elif self.debug:
-                        print("  - No Ticket Available")
+                        print(_("  - No Ticket Available"))
 
                     # Download all Parts
                     self.download_content(titleID, ver)
@@ -144,10 +147,10 @@ root = tree.getroot()
 
 # Get all Regions first
 regions = []
-print("Loading Regions...")
+print(_("Loading Regions..."))
 for child in root:
     if 'REGIONS' in child.tag:
-        print("Regions: ")
+        print(_("Regions: "))
         for sub in child:
             regcode = re.match(r'[0-9A-F]{2}', sub.text)
             print(regcode.group(0))
@@ -155,12 +158,12 @@ for child in root:
         print("------------------\n")
 
 if regions == []:
-    raise Exception("Error: Couldn't load regions from database.xml")
+    raise Exception(_("Error: Couldn't load regions from database.xml"))
 
 # Create list of all titles as NUSTitle objects
 title_list = []
 version_regex = re.compile('\d+')
-print("Creating list of all titles...")
+print(_("Creating list of all titles..."))
 for child in root:
     if 'WW' in child.tag \
     or 'VC' in child.tag \
@@ -186,14 +189,14 @@ for child in root:
             this_title.ticket = sub.text
     title_list.append(this_title)
 
-print("Starting Download..")
+print(_("Starting Download.."))
 # Create Download Threads from NUSTitles
 
 threads = []
 title_num = 0
 while title_num < len(title_list):
     if len(threads) < MAX_THREADS:
-        print("Starting Download Thread - %s[%s] - %i/%i" % \
+        print(_("Starting Download Thread - %s[%s] - %i/%i") % \
             (title_list[title_num].name, title_list[title_num].titleID, \
             (title_num+1), len(title_list)))
         title_list[title_num].start()
@@ -202,7 +205,7 @@ while title_num < len(title_list):
     else:
         for thread in threads:
             if not thread.isAlive():
-                print("Finished Download Thread - %s[%s]" % (thread.name, thread.titleID))
+                print(_("Finished Download Thread - %s[%s]") % (thread.name, thread.titleID))
                 threads.remove(thread)
         sleep(1)
         

@@ -1,0 +1,73 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2019-01-27 10:41-0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+
+
+#: wiiscrape.py:54
+msgid "Downloading: "
+msgstr ""
+
+#: wiiscrape.py:62
+msgid ""
+"  - Failed downloading: %s\n"
+"  - %s"
+msgstr ""
+
+#: wiiscrape.py:85
+msgid "Downloading Content:"
+msgstr ""
+
+#: wiiscrape.py:93
+msgid "  - Content: %i/%i [%s] - %i Bytes"
+msgstr ""
+
+#: wiiscrape.py:105
+msgid ""
+"\n"
+" + Downloading %s(%s) v%s"
+msgstr ""
+
+#: wiiscrape.py:118
+msgid "  - Downloading Ticket.."
+msgstr ""
+
+#: wiiscrape.py:121
+msgid "  - No Ticket Available"
+msgstr ""
+
+#: wiiscrape.py:149
+msgid "Loading Regions..."
+msgstr ""
+
+#: wiiscrape.py:160
+msgid "Error: Couldn't load regions from database.xml"
+msgstr ""
+
+#: wiiscrape.py:165
+msgid "Creating list of all titles..."
+msgstr ""
+
+#: wiiscrape.py:191
+msgid "Starting Download.."
+msgstr ""
+
+#: wiiscrape.py:198
+msgid "Starting Download Thread - %s[%s] - %i/%i"
+msgstr ""
+
+#: wiiscrape.py:207
+msgid "Finished Download Thread - %s[%s]"
+msgstr ""
+
